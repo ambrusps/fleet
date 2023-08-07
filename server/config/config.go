@@ -467,10 +467,12 @@ type MDMConfig struct {
 
 	// WindowsWSTEPIdentityCert is the path to the certificate used to sign
 	// WSTEP responses.
-	WindowsWSTEPIdentityCert string `yaml:"windows_wstep_identity_cert"`
+	WindowsWSTEPIdentityCert      string `yaml:"windows_wstep_identity_cert"`
+	WindowsWSTEPIdentityCertBytes string `yaml:"windows_wstep_identity_cert_bytes"`
 	// WindowsWSTEPIdentityKey is the path to the private key used to sign
 	// WSTEP responses.
-	WindowsWSTEPIdentityKey string `yaml:"windows_wstep_identity_key"`
+	WindowsWSTEPIdentityKey      string `yaml:"windows_wstep_identity_key"`
+	WindowsWSTEPIdentityKeyBytes string `yaml:"windows_wstep_identity_key_bytes"`
 
 	// the following fields hold the parsed, validated TLS certificate set the
 	// first time Microsoft WSTEP is called, as well as the PEM-encoded
@@ -671,13 +673,12 @@ func (m *MDMConfig) loadAppleBMEncryptedToken() ([]byte, error) {
 // MicrosoftWSTEP returns the parsed and validated TLS certificate for Microsoft WSTEP.
 // It parses and validates it if it hasn't been done yet.
 func (m *MDMConfig) MicrosoftWSTEP() (cert *tls.Certificate, pemCert, pemKey []byte, err error) {
-	// TODO: should we also implement support for setting raw bytes in the config (like we do for Apple MDM)?
 	if m.microsoftWSTEP == nil {
 		pair := x509KeyPairConfig{
 			m.WindowsWSTEPIdentityCert,
-			nil,
+			[]byte(m.WindowsWSTEPIdentityCertBytes),
 			m.WindowsWSTEPIdentityKey,
-			nil,
+			[]byte(m.WindowsWSTEPIdentityKeyBytes),
 		}
 		cert, err := pair.Parse(true)
 		if err != nil {
@@ -693,9 +694,9 @@ func (m *MDMConfig) MicrosoftWSTEP() (cert *tls.Certificate, pemCert, pemKey []b
 func (m *MDMConfig) IsMicrosoftWSTEPSet() bool {
 	pair := x509KeyPairConfig{
 		m.WindowsWSTEPIdentityCert,
-		nil,
+		[]byte(m.WindowsWSTEPIdentityCertBytes),
 		m.WindowsWSTEPIdentityKey,
-		nil,
+		[]byte(m.WindowsWSTEPIdentityKeyBytes),
 	}
 	return pair.IsSet()
 }
