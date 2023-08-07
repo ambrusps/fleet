@@ -143,7 +143,7 @@ The following Slack channels are maintained by Fleet's founders:
 
 
 #### Stubs
-The following stubs are included only to make links backward compatible.
+The following stubs are included only to make links backwards compatible.
 
 ##### Levels of confidentiality
 
